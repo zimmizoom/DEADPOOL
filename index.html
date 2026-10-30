@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Superhero Complaint Department | Hosted by Deadpool</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@300;400;600;800;900&family=Permanent+Marker&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pool: {
+                            red: '#ff1e27',
+                            darkred: '#8b0000',
+                            deep: '#1f0507',
+                            black: '#0a0a0c',
+                            gold: '#ffb703',
+                            gray: '#18181b',
+                            cork: '#2c1e14',
+                            tape: '#d8c29d'
+                        }
+                    },
+                    fontFamily: {
+                        creepster: ['Creepster', 'cursive'],
+                        marker: ['"Permanent Marker"', 'cursive'],
+                        typewriter: ['"Special Elite"', 'monospace'],
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite alternate',
+                        'float': 'float 4s ease-in-out infinite',
+                        'wiggle': 'wiggle 0.5s ease-in-out infinite',
+                        'flicker': 'flicker 1.5s infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 10px #ff1e27, inset 0 0 5px #ff1e27' },
+                            '100%': { boxShadow: '0 0 25px #ff1e27, 0 0 10px #8b0000, inset 0 0 15px #ff1e27' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-10px) rotate(1deg)' }
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' }
+                        },
+                        flicker: {
+                            '0%, 100%': { opacity: 1 },
+                            '50%': { opacity: 0.4 },
+                            '75%': { opacity: 0.8 }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8b0000;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff1e27;
+        }
+
+        /* Corkboard Texture */
+        .bg-corkboard {
+            background-color: #21150d;
+            background-image: radial-gradient(#3a2617 15%, transparent 16%), radial-gradient(#150b06 15%, transparent 16%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        /* Polaroid Card Effects */
+        .polaroid {
+            background: #f4edd9;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255, 30, 39, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: scale(1.04) rotate(0deg) !important;
+            z-index: 40 !important;
+            box-shadow: 0 15px 35px rgba(255, 30, 39, 0.5);
+        }
+
+        /* Torn Paper Style */
+        .torn-paper {
+            background: #1e1b18;
+            border-left: 4px solid #ff1e27;
+            position: relative;
+            box-shadow: 3px 5px 15px rgba(0,0,0,0.6);
+        }
+
+        /* Tape Effect */
+        .tape-top {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 90px;
+            height: 25px;
+            background-color: rgba(216, 194, 157, 0.65);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            backdrop-filter: blur(1px);
+            z-index: 20;
+        }
+
+        /* Pushpin */
+        .pushpin {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 5px 5px, #ff4d4d, #8b0000);
+            box-shadow: 2px 4px 6px rgba(0,0,0,0.7);
+            position: absolute;
+            z-index: 30;
+        }
+
+        /* Speech Bubble */
+        .deadpool-bubble {
+            position: relative;
+            background: #ff1e27;
+            color: #ffffff;
+            border-radius: .4em;
+        }
+        .deadpool-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-top-color: #ff1e27;
+            border-bottom: 0;
+            margin-left: -15px;
+            margin-bottom: -15px;
+        }
+
+        /* Scanner Scanline Effect */
+        .scanline {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(255, 30, 39, 0.2) 50%,
+                rgba(255, 30, 39, 0.2)
+            );
+            background-size: 100% 4px;
+        }
+    </style>
+</head>
+<body class="bg-pool-black text-gray-100 font-sans antialiased selection:bg-pool-red selection:text-white relative overflow-x-hidden">
+
+    <!-- Atmospheric Particle Canvas -->
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-40"></canvas>
+
+    <!-- ========================================== -->
+    <!-- TWIST 1: NO NAVBAR ("LOST A LIMB")        -->
+    <!-- Floating Merc Compass & Dynamic Docks      -->
+    <!-- ========================================== -->
+    <div id="mercCompass" class="fixed bottom-6 right-6 z-50 flex flex-col items-end group">
+        <!-- Expanded Quick Nav Dial -->
+        <div id="compassDial" class="hidden flex-col gap-3 mb-4 transition-all duration-300 transform scale-90 opacity-0 group-hover:flex group-hover:scale-100 group-hover:opacity-100">
+            <a href="#hero" onclick="playSfx('click')" class="flex items-center gap-2 bg-pool-deep border border-pool-red text-white px-4 py-2 rounded-full shadow-lg hover:bg-pool-red transition">
+                <span class="font-marker text-sm">01. Dead-HQ</span> <i class="fa-solid font-bold fa-skull"></i>
+            </a>
+            <a href="#evidence-wall" onclick="playSfx('click')" class="flex items-center gap-2 bg-pool-deep border border-pool-red text-white px-4 py-2 rounded-full shadow-lg hover:bg-pool-red transition">
+                <span class="font-marker text-sm">02. Evidence Wall</span> <i class="fa-solid fa-map-pin"></i>
+            </a>
+            <a href="#complaints" onclick="playSfx('click')" class="flex items-center gap-2 bg-pool-deep border border-pool-red text-white px-4 py-2 rounded-full shadow-lg hover:bg-pool-red transition">
+                <span class="font-marker text-sm">03. Whine Vault</span> <i class="fa-solid fa-scroll"></i>
+            </a>
+            <a href="#sponsor-kapidhwaj" onclick="playSfx('click')" class="flex items-center gap-2 bg-pool-deep border border-yellow-500 text-yellow-400 px-4 py-2 rounded-full shadow-lg hover:bg-yellow-600 hover:text-black transition">
+                <span class="font-marker text-sm">04. Kapidhwaj Tech</span> <i class="fa-solid fa-microchip"></i>
+            </a>
+            <a href="#reel-4k" onclick="playSfx('click')" class="flex items-center gap-2 bg-pool-deep border border-pool-red text-white px-4 py-2 rounded-full shadow-lg hover:bg-pool-red transition">
+                <span class="font-marker text-sm">05. 4K HD Shorts</span> <i class="fa-solid fa-film"></i>
+            </a>
+        </div>
+
+        <!-- Compass Trigger Button -->
+        <button id="compassBtn" onclick="toggleCompass()" class="relative w-16 h-16 rounded-full bg-pool-red border-2 border-white shadow-[0_0_20px_#ff1e27] flex items-center justify-center text-2xl text-black font-extrabold hover:scale-110 active:scale-95 transition cursor-pointer">
+            <i class="fa-solid fa-compass animate-spin-slow text-3xl"></i>
+            <span class="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-black px-2 py-0.5 rounded-full border border-black animate-bounce">NO NAVBAR</span>
+        </button>
+    </div>
+
+    <!-- Sticky Audio & Quick Action Dock Top Left -->
+    <div class="fixed top-4 left-4 z-50 flex items-center gap-3 bg-pool-black/80 backdrop-blur-md p-2 rounded-full border border-pool-red/40 shadow-xl">
+        <button onclick="toggleAudio()" id="audioBtn" class="w-10 h-10 rounded-full bg-pool-deep border border-pool-red text-pool-red flex items-center justify-center hover:bg-pool-red hover:text-white transition" title="Toggle Sound Effects">
+            <i id="audioIcon" class="fa-solid fa-volume-high"></i>
+        </button>
+        <button onclick="openNewComplaintModal()" class="bg-pool-red text-white font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 shadow-[0_0_10px_#ff1e27]">
+            <i class="fa-solid fa-file-circle-plus"></i> Submit Whine
+        </button>
+        <span class="text-xs font-marker text-yellow-400 hidden sm:inline-block pr-2">₹ RUPEES DEPT.</span>
+    </div>
+
+    <!-- Main Container -->
+    <main class="relative z-10">
+
+        <!-- ========================================== -->
+        <!-- SECTION 1: HERO & DEADPOOL SPEECH          -->
+        <!-- ========================================== -->
+        <section id="hero" class="min-h-screen flex flex-col justify-center items-center relative px-4 py-20">
+            <!-- Halloween Spooky Background Accents -->
+            <div class="absolute inset-0 bg-gradient-to-b from-pool-deep via-pool-black to-pool-black opacity-90 -z-10"></div>
+            <div class="absolute top-10 left-10 text-6xl opacity-10 text-pool-red pointer-events-none animate-float"><i class="fa-solid fa-ghost"></i></div>
+            <div class="absolute bottom-20 right-10 text-7xl opacity-10 text-pool-red pointer-events-none animate-float" style="animation-delay: 2s;"><i class="fa-solid fa-spider"></i></div>
+
+            <!-- Main Banner Card -->
+            <div class="max-w-4xl w-full text-center relative">
+                
+                <!-- Deadpool Head Visual & Speech Bubble -->
+                <div class="flex flex-col items-center justify-center mb-6">
+                    <div class="deadpool-bubble p-4 max-w-lg mb-6 shadow-2xl border-2 border-white animate-wiggle">
+                        <p class="font-marker text-lg sm:text-xl leading-relaxed text-black">
+                            "Welcome to the <span class="underline decoration-black">Superhero Complaint Department</span>! Did Spidey break your chimney? Did Thor drop a hammer on your foot? Submit your whine below. I promise to personally ignore it or blow it up!"
+                        </p>
+                    </div>
+
+                    <!-- Interactive Deadpool Avatar -->
+                    <div onclick="triggerDeadpoolRoast()" class="relative group cursor-pointer">
+                        <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-pool-red border-4 border-black shadow-[0_0_30px_#ff1e27] overflow-hidden flex items-center justify-center relative">
+                            <!-- Deadpool Mask Graphic -->
+                            <div class="w-full h-full bg-pool-red relative flex items-center justify-center">
+                                <div class="absolute inset-y-0 w-1/2 bg-black/20 left-0"></div>
+                                <!-- Left Eye Black Patch -->
+                                <div class="absolute left-3 top-8 w-14 h-20 bg-black rounded-full rotate-12 flex items-center justify-center">
+                                    <div class="w-8 h-4 bg-white rounded-full -rotate-12 group-hover:scale-y-50 transition"></div>
+                                </div>
+                                <!-- Right Eye Black Patch -->
+                                <div class="absolute right-3 top-8 w-14 h-20 bg-black rounded-full -rotate-12 flex items-center justify-center">
+                                    <div class="w-8 h-4 bg-white rounded-full rotate-12 group-hover:scale-y-50 transition"></div>
+                                </div>
+                                <!-- Center Stitch Line -->
+                                <div class="absolute h-full w-1 bg-black/40"></div>
+                            </div>
+                        </div>
+                        <span class="absolute -bottom-2 bg-black text-pool-red font-marker text-xs px-3 py-1 rounded-full border border-pool-red group-hover:scale-110 transition">
+                            CLICK TO ROAST ME!
+                        </span>
+                    </div>
+                </div>
+
+                <h1 class="font-creepster text-5xl sm:text-7xl md:text-8xl text-pool-red tracking-wider drop-shadow-[0_5px_10px_rgba(0,0,0,0.9)] mb-2">
+                    GRIEVANCE GRAVEYARD
+                </h1>
+                <p class="text-gray-400 font-mono text-sm sm:text-base max-w-2xl mx-auto mb-8">
+                    Where hero damage tickets come to die in <span class="text-yellow-400 font-bold">Indian Rupees (₹)</span>. Sponsored by our tech overlords at <a href="#sponsor-kapidhwaj" class="text-pool-red underline hover:text-white">@kapidhwaj.innovations</a>.
+                </p>
+
+                <!-- Quick Stats / Ticker Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto text-left">
+                    <div class="bg-pool-gray/80 border border-pool-red/30 p-3 rounded-lg backdrop-blur">
+                        <span class="text-xs text-gray-400 block uppercase">Total Whines</span>
+                        <span class="font-marker text-2xl text-pool-red" id="statTotal">1,492</span>
+                    </div>
+                    <div class="bg-pool-gray/80 border border-pool-red/30 p-3 rounded-lg backdrop-blur">
+                        <span class="text-xs text-gray-400 block uppercase">Rupees Owed</span>
+                        <span class="font-marker text-2xl text-yellow-400">₹84,92,100</span>
+                    </div>
+                    <div class="bg-pool-gray/80 border border-pool-red/30 p-3 rounded-lg backdrop-blur">
+                        <span class="text-xs text-gray-400 block uppercase">Rejected Tickets</span>
+                        <span class="font-marker text-2xl text-green-400">99.8%</span>
+                    </div>
+                    <div class="bg-pool-gray/80 border border-pool-red/30 p-3 rounded-lg backdrop-blur">
+                        <span class="text-xs text-gray-400 block uppercase">Chimichangas Eaten</span>
+                        <span class="font-marker text-2xl text-orange-500">4,209</span>
+                    </div>
+                </div>
+
+                <!-- Scroll Down Hint -->
+                <div class="mt-12 animate-bounce">
+                    <a href="#evidence-wall" class="text-gray-500 hover:text-pool-red text-2xl">
+                        <i class="fa-solid fa-angles-down"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- HEX 1: THE EVIDENCE WALL (CORKBOARD + STRINGS)-->
+        <!-- ========================================== -->
+        <section id="evidence-wall" class="py-20 px-4 bg-corkboard relative border-y-4 border-pool-red overflow-hidden">
+            <!-- Section Header -->
+            <div class="max-w-6xl mx-auto mb-12 text-center relative z-10">
+                <div class="inline-block bg-black px-6 py-2 border-2 border-pool-red rounded-full mb-3">
+                    <span class="text-pool-red font-marker text-sm uppercase tracking-widest"><i class="fa-solid fa-map-pin"></i> HEX REQUIREMENT: THE EVIDENCE WALL</span>
+                </div>
+                <h2 class="font-creepster text-4xl sm:text-6xl text-yellow-400 drop-shadow-[0_4px_8px_#000]">
+                    CRIME SCENE CLUE BOARD
+                </h2>
+                <p class="text-gray-300 font-typewriter text-sm sm:text-base max-w-xl mx-auto">
+                    Torn paper complaints, crime scene clues, pinned polaroids, and red string connections.
+                </p>
+            </div>
+
+            <!-- Corkboard Grid with Canvas Red Strings Overlay -->
+            <div class="max-w-6xl mx-auto relative min-h-[600px] p-6 rounded-2xl border-8 border-yellow-900/60 shadow-2xl">
+                
+                <!-- SVG Overlay for Red String Connections -->
+                <svg id="stringSvg" class="absolute inset-0 w-full h-full pointer-events-none z-20">
+                    <!-- Dynamic Strings will be drawn here via JS -->
+                </svg>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+                    
+                    <!-- Evidence Item 1: Polaroid Suspect -->
+                    <div id="node1" class="polaroid p-4 rounded transform -rotate-3 relative flex flex-col items-center">
+                        <div class="pushpin -top-2 left-1/2 transform -translate-x-1/2"></div>
+                        <div class="tape-top"></div>
+                        <div class="w-full h-48 bg-gray-900 rounded overflow-hidden relative border border-gray-400 mb-3">
+                            <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60" alt="Spider Hero Damage" class="w-full h-full object-cover filter contrast-125 grayscale hover:grayscale-0 transition">
+                            <span class="absolute bottom-1 right-1 bg-red-600 text-white text-[10px] font-bold px-1 rounded">SUSPECT #1</span>
+                        </div>
+                        <p class="font-marker text-black text-center text-lg leading-tight">"Web-Slinger Smashed My Auto Rickshaw!"</p>
+                        <p class="font-typewriter text-xs text-gray-700 mt-1">Target: Peter P. | Damage: ₹1,50,000</p>
+                    </div>
+
+                    <!-- Evidence Item 2: Torn Paper Complaint -->
+                    <div id="node2" class="torn-paper p-6 rounded transform rotate-2 relative">
+                        <div class="pushpin top-2 right-2"></div>
+                        <div class="flex items-center gap-2 text-pool-red font-marker text-xs mb-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i> RANSOM / CLAIM TICKET #809
+                        </div>
+                        <p class="font-typewriter text-gray-200 text-sm leading-relaxed mb-4">
+                            "Thor summoned thunder near my sweet shop in Delhi. All my Gulab Jamuns melted due to the sonic blast! I demand compensation immediately."
+                        </p>
+                        <div class="border-t border-gray-700 pt-2 flex justify-between items-center text-xs text-gray-400">
+                            <span>Claimant: Gupta Ji</span>
+                            <span class="text-yellow-400 font-bold">₹45,000</span>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Item 3: Deadpool Note -->
+                    <div id="node3" class="polaroid p-4 rounded transform -rotate-2 relative flex flex-col items-center bg-yellow-100">
+                        <div class="pushpin top-1 left-4"></div>
+                        <div class="tape-top"></div>
+                        <div class="w-full h-48 bg-black rounded overflow-hidden relative border-2 border-pool-red mb-3 flex items-center justify-center">
+                            <i class="fa-solid fa-mask text-6xl text-pool-red"></i>
+                            <span class="absolute top-2 left-2 bg-pool-red text-white text-[10px] font-bold px-2 py-0.5 rounded">EXHIBIT D</span>
+                        </div>
+                        <p class="font-marker text-pool-red text-center text-xl">"DEADPOOL WAS HERE!"</p>
+                        <p class="font-typewriter text-xs text-gray-800 mt-1 text-center">"I didn't break it, but I took credit anyway."</p>
+                    </div>
+
+                </div>
+
+                <!-- Evidence Wall Bottom Banner -->
+                <div class="mt-12 bg-black/80 border border-pool-red p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left relative z-30">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-circle-nodes text-3xl text-pool-red animate-pulse"></i>
+                        <div>
+                            <h4 class="font-marker text-white text-lg">RED STRING TACTICAL MATRIX</h4>
+                            <p class="text-xs text-gray-400">All claims are cross-analyzed by <span class="text-yellow-400">Kapidhwaj Pattern Recognition AI</span>.</p>
+                        </div>
+                    </div>
+                    <button onclick="reconnectStrings()" class="bg-pool-red hover:bg-red-700 text-white font-bold text-xs uppercase px-4 py-2 rounded-lg transition">
+                        <i class="fa-solid fa-rotate"></i> Re-String Clue Board
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SECTION 2: COMPLAINT TICKET ENGINE         -->
+        <!-- ========================================== -->
+        <section id="complaints" class="py-20 px-4 max-w-6xl mx-auto">
+            
+            <!-- Header & Controls -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
+                <div>
+                    <span class="text-pool-red font-marker text-sm uppercase tracking-widest"><i class="fa-solid fa-scroll"></i> LIVE TICKET SYSTEM</span>
+                    <h2 class="font-creepster text-4xl sm:text-6xl text-white">THE WHINE VAULT</h2>
+                    <p class="text-gray-400 text-sm font-mono mt-1">Browse active superhero damage grievances or file your own.</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="openNewComplaintModal()" class="bg-pool-red hover:bg-red-700 text-white font-extrabold text-sm px-5 py-3 rounded-xl shadow-[0_0_15px_#ff1e27] transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-lg"></i> FILE NEW WHINE TICKET
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8 border-b border-gray-800 pb-4">
+                <button onclick="filterTickets('all')" class="tab-btn active bg-pool-red text-white px-4 py-2 rounded-lg text-xs font-bold uppercase transition">All Whines</button>
+                <button onclick="filterTickets('pending')" class="tab-btn bg-pool-gray text-gray-400 hover:text-white px-4 py-2 rounded-lg text-xs font-bold uppercase transition">Pending Whine</button>
+                <button onclick="filterTickets('kapidhwaj')" class="tab-btn bg-pool-gray text-yellow-400 hover:text-yellow-300 px-4 py-2 rounded-lg text-xs font-bold uppercase transition"><i class="fa-solid fa-microchip mr-1"></i> Under Kapidhwaj Scan</button>
+                <button onclick="filterTickets('rejected')" class="tab-btn bg-pool-gray text-gray-400 hover:text-white px-4 py-2 rounded-lg text-xs font-bold uppercase transition">Rejected By Deadpool</button>
+                <button onclick="filterTickets('resolved')" class="tab-btn bg-pool-gray text-gray-400 hover:text-white px-4 py-2 rounded-lg text-xs font-bold uppercase transition">Resolved With Explosions</button>
+            </div>
+
+            <!-- Complaint Tickets Container -->
+            <div id="ticketsContainer" class="grid grid-cols-1 gap-6">
+                <!-- Dynamic Tickets will be injected here via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SPONSOR TWIST: KAPIDHWAJ INNOVATIONS       -->
+        <!-- ========================================== -->
+        <section id="sponsor-kapidhwaj" class="py-20 px-4 bg-gradient-to-b from-pool-black via-pool-deep to-pool-black relative border-t-2 border-yellow-500/40">
+            <div class="max-w-5xl mx-auto bg-pool-gray/90 border-2 border-yellow-500 rounded-3xl p-6 sm:p-10 shadow-[0_0_30px_rgba(234,179,8,0.2)] relative overflow-hidden">
+                
+                <!-- Sponsor Watermark/Badge -->
+                <div class="absolute -right-10 -bottom-10 text-yellow-500/10 text-9xl pointer-events-none font-serif font-black">
+                    KAPIDHWAJ
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                    <!-- Sponsor Emblem Visual -->
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-black border-2 border-yellow-500 flex flex-col items-center justify-center text-center p-4 shadow-xl shrink-0 group hover:scale-105 transition">
+                        <i class="fa-solid fa-shield-halved text-5xl text-yellow-400 mb-2 group-hover:rotate-12 transition"></i>
+                        <span class="font-marker text-xs text-white">KAPIDHWAJ</span>
+                        <span class="text-[9px] text-yellow-500 font-mono">INNOVATIONS</span>
+                    </div>
+
+                    <!-- Sponsor Content -->
+                    <div class="flex-1 text-center md:text-left">
+                        <div class="inline-flex items-center gap-2 bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 px-3 py-1 rounded-full text-xs font-mono mb-3">
+                            <i class="fa-solid fa-star"></i> OFFICIAL TACTICAL PARTNER
+                        </div>
+                        <h3 class="font-creepster text-3xl sm:text-5xl text-yellow-400 mb-3">
+                            KAPIDHWAJ ARMOR & TECH LABS
+                        </h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6 font-sans">
+                            "When superheroes break your stuff, standard insurance won't pay. That's why Deadpool trusts <strong class="text-white">Kapidhwaj Innovations</strong> for AI-powered damage scanning, suit repairs, and high-frequency noise dampeners for Wolverine's grunting."
+                        </p>
+
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                            <!-- Mandatory Instagram Link -->
+                            <a href="https://www.instagram.com/kapidhwaj.innovations/" target="_blank" rel="noopener noreferrer" onclick="playSfx('click')" class="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-extrabold text-sm px-6 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
+                                <i class="fa-brands fa-instagram text-xl"></i> FOLLOW @kapidhwaj.innovations
+                            </a>
+                            <span class="text-xs text-gray-400 font-mono">Official Alliance Protocol Verified <i class="fa-solid fa-circle-check text-green-400"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SECTION 3: 4K HD SHORTS & MEME REELS       -->
+        <!-- ========================================== -->
+        <section id="reel-4k" class="py-20 px-4 max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-pool-red font-marker text-sm uppercase tracking-widest"><i class="fa-solid fa-film"></i> CINEMATIC ROAST DECK</span>
+                <h2 class="font-creepster text-4xl sm:text-6xl text-white">4K ULTRA HD SHORTS</h2>
+                <p class="text-gray-400 text-sm font-mono">Deadpool's recorded field roast footage and tactical break-downs.</p>
+            </div>
+
+            <!-- Shorts Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                
+                <!-- Short 1 -->
+                <div class="bg-pool-gray border border-pool-red/40 rounded-2xl overflow-hidden hover:border-pool-red transition group">
+                    <div class="relative h-64 bg-black flex items-center justify-center overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop&q=60" alt="Deadpool short" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-60">
+                        <button onclick="playShortModal('Spidey ruined my Chimichanga stand in Mumbai!')" class="absolute w-16 h-16 rounded-full bg-pool-red/90 text-white text-2xl flex items-center justify-center border-2 border-white shadow-[0_0_20px_#ff1e27] group-hover:scale-110 transition">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </button>
+                        <span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">4K ULTRA HD</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-marker text-lg text-white mb-1">Spidey's Mumbai Web Disaster</h4>
+                        <p class="text-xs text-gray-400 font-mono">Watch Deadpool inspect ₹2,50,000 worth of web damage.</p>
+                    </div>
+                </div>
+
+                <!-- Short 2 -->
+                <div class="bg-pool-gray border border-pool-red/40 rounded-2xl overflow-hidden hover:border-pool-red transition group">
+                    <div class="relative h-64 bg-black flex items-center justify-center overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1514539079130-25950c84af65?w=500&auto=format&fit=crop&q=60" alt="Deadpool short" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-60">
+                        <button onclick="playShortModal('Testing Kapidhwaj Noise Dampeners on Logan!')" class="absolute w-16 h-16 rounded-full bg-pool-red/90 text-white text-2xl flex items-center justify-center border-2 border-white shadow-[0_0_20px_#ff1e27] group-hover:scale-110 transition">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </button>
+                        <span class="absolute top-3 left-3 bg-yellow-500 text-black text-[10px] font-bold px-2 py-0.5 rounded">KAPIDHWAJ LABS</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-marker text-lg text-white mb-1">Wolverine Sound Dampening Test</h4>
+                        <p class="text-xs text-gray-400 font-mono">Kapidhwaj tech reduces Logan's grunts by 98%.</p>
+                    </div>
+                </div>
+
+                <!-- Short 3 -->
+                <div class="bg-pool-gray border border-pool-red/40 rounded-2xl overflow-hidden hover:border-pool-red transition group">
+                    <div class="relative h-64 bg-black flex items-center justify-center overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500&auto=format&fit=crop&q=60" alt="Deadpool short" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-60">
+                        <button onclick="playShortModal('Hulk smashed my auto rickshaw fleet!')" class="absolute w-16 h-16 rounded-full bg-pool-red/90 text-white text-2xl flex items-center justify-center border-2 border-white shadow-[0_0_20px_#ff1e27] group-hover:scale-110 transition">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </button>
+                        <span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">4K ULTRA HD</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-marker text-lg text-white mb-1">Hulk Rickshaw Smash Audit</h4>
+                        <p class="text-xs text-gray-400 font-mono">Deadpool calculates claims in Indian Rupees.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-black py-12 border-t border-pool-red/30 text-center text-xs text-gray-500 font-mono">
+            <div class="max-w-4xl mx-auto px-4 flex flex-col items-center gap-4">
+                <div class="flex items-center gap-2 font-creepster text-2xl text-pool-red">
+                    <i class="fa-solid fa-mask"></i> SUPERHERO COMPLAINT DEPT.
+                </div>
+                <p>
+                    All rights reserved by Deadpool. Sponsored proudly by <a href="https://www.instagram.com/kapidhwaj.innovations/" target="_blank" class="text-yellow-400 underline">@kapidhwaj.innovations</a>.
+                </p>
+                <p class="text-gray-600">
+                    "Maximum Effort! If you don't like our answers, take it up with Cable."
+                </p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1: NEW COMPLAINT FORM                -->
+    <!-- ========================================== -->
+    <div id="newComplaintModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-pool-gray border-2 border-pool-red rounded-2xl max-w-lg w-full p-6 relative shadow-[0_0_50px_rgba(255,30,39,0.4)]">
+            <button onclick="closeNewComplaintModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="font-creepster text-3xl text-pool-red mb-1">FILE A HERO WHINE TICKET</h3>
+            <p class="text-xs text-gray-400 font-mono mb-6">Describe the hero who ruined your day and estimate damage in ₹ Rupees.</p>
+
+            <form id="complaintForm" onsubmit="handleFormSubmit(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Offending Hero/Villain</label>
+                    <input type="text" id="heroName" required placeholder="e.g. Spider-Man, Hulk, Thor" class="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-pool-red focus:outline-none text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Incident Category</label>
+                    <select id="incidentType" class="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-pool-red focus:outline-none text-sm">
+                        <option value="Vehicle Destruction">Vehicle Destruction</option>
+                        <option value="Property Annihilation">Property Annihilation</option>
+                        <option value="Food/Chimichanga Ruined">Food/Chimichanga Ruined</option>
+                        <option value="Emotional Damage">Emotional Damage</option>
+                        <option value="Deadpool Did It">Deadpool Did It</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Damage Estimate (in Indian Rupees ₹)</label>
+                    <input type="number" id="damageRupees" required placeholder="e.g. 50000" class="w-full bg-black border border-gray-700 rounded-lg p-3 text-yellow-400 font-bold focus:border-pool-red focus:outline-none text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Detailed Grievance</label>
+                    <textarea id="complaintDesc" rows="3" required placeholder="Tell Deadpool what happened..." class="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-pool-red focus:outline-none text-sm"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-pool-red hover:bg-red-700 text-white font-extrabold py-3 rounded-xl shadow-[0_0_15px_#ff1e27] transition">
+                        SUBMIT WHINE TO DEADPOOL
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 2: 4K SHORT VIDEO PLAYER SIMULATOR   -->
+    <!-- ========================================== -->
+    <div id="videoModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-pool-gray border-2 border-pool-red rounded-2xl max-w-2xl w-full p-6 relative text-center">
+            <button onclick="closeShortModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <span class="inline-block bg-pool-red text-white text-xs font-bold px-3 py-1 rounded-full mb-3">4K ULTRA HD SHORTS REEL</span>
+            <h3 id="videoTitle" class="font-marker text-2xl text-yellow-400 mb-4">Video Title</h3>
+
+            <!-- Simulated Video Screen Canvas -->
+            <div class="relative w-full h-72 bg-black rounded-xl overflow-hidden border border-gray-800 flex items-center justify-center mb-4">
+                <div class="scanline absolute inset-0"></div>
+                <div class="z-10 flex flex-col items-center">
+                    <i class="fa-solid fa-mask text-7xl text-pool-red animate-bounce mb-3"></i>
+                    <p class="font-marker text-white text-lg px-6" id="videoText">"Deadpool is currently roasting this claim..."</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 font-mono">
+                Powered by <a href="https://www.instagram.com/kapidhwaj.innovations/" target="_blank" class="text-yellow-400 underline">@kapidhwaj.innovations</a> High-Dynamic Rendering Engine.
+            </p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Audio Synthesizer Setup (Web Audio API)
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSfx(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'roast') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(400, now + 0.2);
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'upvote') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('audioIcon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                playSfx('click');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark';
+            }
+        }
+
+        // Tactical Compass Toggle
+        function toggleCompass() {
+            playSfx('click');
+            const dial = document.getElementById('compassDial');
+            if (dial.classList.contains('hidden')) {
+                dial.classList.remove('hidden');
+            } else {
+                dial.classList.add('hidden');
+            }
+        }
+
+        // Mock Initial Tickets State
+        let tickets = [
+            {
+                id: 'TK-101',
+                hero: 'Spider-Man',
+                category: 'Vehicle Destruction',
+                rupees: 185000,
+                desc: 'Webbed my auto rickshaw to a streetlight during a chase. Now the roof is torn off and my meter is spinning infinitely!',
+                status: 'pending',
+                upvotes: 42,
+                reply: 'Deadpool: "Look, webs are organic or synthetic depending on the universe. Either way, wash it with hot water and stop whining. Claim denied!"'
+            },
+            {
+                id: 'TK-102',
+                hero: 'The Hulk',
+                category: 'Property Annihilation',
+                rupees: 1250000,
+                desc: 'Hulk smashed through my sweet shop counter while looking for puny villains. 400kg of Kaju Katli flattened.',
+                status: 'kapidhwaj',
+                upvotes: 89,
+                reply: 'Deadpool: "Kapidhwaj R&D Labs is analyzing the residual gamma radiation. Good news: Your Kaju Katli now glows in the dark!"'
+            },
+            {
+                id: 'TK-103',
+                hero: 'Thor',
+                category: 'Food/Chimichanga Ruined',
+                rupees: 4500,
+                desc: 'Lightning strike over Delhi fried my chimichanga food cart electrical fryer.',
+                status: 'rejected',
+                upvotes: 15,
+                reply: 'Deadpool: "Nobody ruins chimichangas except ME! Thor gets a pass because his hair is glorious. Go eat a salad."'
+            },
+            {
+                id: 'TK-104',
+                hero: 'Wolverine',
+                category: 'Emotional Damage',
+                rupees: 99999,
+                desc: 'Logan growled at my stray dog in Mumbai. Dog won\'t stop barking in French now.',
+                status: 'resolved',
+                upvotes: 110,
+                reply: 'Deadpool: "Resolved with high-frequency noise dampeners provided by @kapidhwaj.innovations. Dog now speaks fluent English."'
+            }
+        ];
+
+        // Render Complaint Tickets
+        function renderTickets(filter = 'all') {
+            const container = document.getElementById('ticketsContainer');
+            container.innerHTML = '';
+
+            const filtered = tickets.filter(t => {
+                if (filter === 'all') return true;
+                return t.status === filter;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-pool-gray p-8 rounded-2xl border border-gray-800 text-center text-gray-500 font-mono">
+                        <i class="fa-solid fa-ghost text-4xl mb-2 text-pool-red"></i>
+                        <p>No complaints found under this category!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(t => {
+                let statusBadge = '';
+                if (t.status === 'pending') {
+                    statusBadge = `<span class="bg-blue-600/20 text-blue-400 border border-blue-500 px-3 py-1 rounded-full text-xs font-mono">Pending Whine</span>`;
+                } else if (t.status === 'kapidhwaj') {
+                    statusBadge = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500 px-3 py-1 rounded-full text-xs font-mono"><i class="fa-solid fa-microchip"></i> Under Kapidhwaj Scan</span>`;
+                } else if (t.status === 'rejected') {
+                    statusBadge = `<span class="bg-red-600/20 text-red-400 border border-red-500 px-3 py-1 rounded-full text-xs font-mono">Rejected by Deadpool</span>`;
+                } else if (t.status === 'resolved') {
+                    statusBadge = `<span class="bg-green-600/20 text-green-400 border border-green-500 px-3 py-1 rounded-full text-xs font-mono">Resolved with Explosions</span>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = "bg-pool-gray border border-gray-800 hover:border-pool-red/60 rounded-2xl p-6 transition shadow-xl relative overflow-hidden";
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 border-b border-gray-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono text-xs text-pool-red font-bold">${t.id}</span>
+                            <h3 class="font-marker text-xl text-white">${t.hero}</h3>
+                            <span class="bg-black text-gray-300 text-[10px] font-mono px-2 py-0.5 rounded border border-gray-700">${t.category}</span>
+                        </div>
+                        <div>${statusBadge}</div>
+                    </div>
+
+                    <p class="text-gray-300 text-sm font-sans mb-4 leading-relaxed">${t.desc}</p>
+
+                    <div class="bg-black/60 border-l-4 border-pool-red p-3 rounded mb-4">
+                        <span class="text-[10px] text-pool-red font-bold uppercase block mb-1"><i class="fa-solid fa-mask"></i> Deadpool Auto-Reply:</span>
+                        <p class="text-xs text-gray-300 italic font-mono">${t.reply}</p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <div class="text-sm font-bold text-yellow-400 font-mono">
+                            Claim: ₹${t.rupees.toLocaleString('en-IN')}
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="upvoteTicket('${t.id}')" class="bg-black/60 hover:bg-pool-red text-white text-xs px-3 py-1.5 rounded-lg border border-gray-700 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-pool-red"></i> <span>${t.upvotes}</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterTickets(type) {
+            playSfx('click');
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('bg-pool-red', 'text-white');
+                b.classList.add('bg-pool-gray', 'text-gray-400');
+            });
+            event.target.classList.remove('bg-pool-gray', 'text-gray-400');
+            event.target.classList.add('bg-pool-red', 'text-white');
+            renderTickets(type);
+        }
+
+        function upvoteTicket(id) {
+            playSfx('upvote');
+            const item = tickets.find(t => t.id === id);
+            if (item) {
+                item.upvotes++;
+                renderTickets();
+            }
+        }
+
+        // Modal Controls
+        function openNewComplaintModal() {
+            playSfx('click');
+            document.getElementById('newComplaintModal').classList.remove('hidden');
+        }
+        function closeNewComplaintModal() {
+            playSfx('click');
+            document.getElementById('newComplaintModal').classList.add('hidden');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            playSfx('roast');
+
+            const hero = document.getElementById('heroName').value;
+            const category = document.getElementById('incidentType').value;
+            const rupees = parseInt(document.getElementById('damageRupees').value) || 1000;
+            const desc = document.getElementById('complaintDesc').value;
+
+            const roasts = [
+                `Deadpool: "Claims for ${hero} are handled on Tuesdays between 3 AM and 3:01 AM. Denied!"`,
+                `Deadpool: "I forwarded your claim to @kapidhwaj.innovations AI. It calculated 0% probability of caring."`,
+                `Deadpool: "₹${rupees}? That could buy me 500 chimichangas! Claim marked under Kapidhwaj AI Scan."`
+            ];
+
+            const newTicket = {
+                id: `TK-${Math.floor(100 + Math.random() * 900)}`,
+                hero: hero,
+                category: category,
+                rupees: rupees,
+                desc: desc,
+                status: 'kapidhwaj',
+                upvotes: 1,
+                reply: roasts[Math.floor(Math.random() * roasts.length)]
+            };
+
+            tickets.unshift(newTicket);
+            renderTickets();
+            closeNewComplaintModal();
+            document.getElementById('complaintForm').reset();
+        }
+
+        // 4K Short Video Modal
+        function playShortModal(title) {
+            playSfx('roast');
+            document.getElementById('videoTitle').innerText = title;
+            document.getElementById('videoText').innerText = `"${title} - Analysed in 4K Ultra HD"`;
+            document.getElementById('videoModal').classList.remove('hidden');
+        }
+        function closeShortModal() {
+            playSfx('click');
+            document.getElementById('videoModal').classList.add('hidden');
+        }
+
+        function triggerDeadpoolRoast() {
+            playSfx('roast');
+            const roasts = [
+                "Hey! Stop clicking me and go pay your taxes!",
+                "Sponsor check! Shoutout to @kapidhwaj.innovations for keeping my suit shiny!",
+                "You want a refund? Talk to Wolverine's tailor!",
+                "Maximum effort! Minimum compassion for your broken rickshaw!"
+            ];
+            alert(roasts[Math.floor(Math.random() * roasts.length)]);
+        }
+
+        // Evidence Wall SVG Strings Renderer
+        function reconnectStrings() {
+            playSfx('click');
+            const svg = document.getElementById('stringSvg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const node1 = document.getElementById('node1');
+            const node2 = document.getElementById('node2');
+            const node3 = document.getElementById('node3');
+
+            if (!node1 || !node2 || !node3) return;
+
+            const r1 = node1.getBoundingClientRect();
+            const r2 = node2.getBoundingClientRect();
+            const r3 = node3.getBoundingClientRect();
+            const parent = svg.getBoundingClientRect();
+
+            const p1 = { x: r1.left + r1.width/2 - parent.left, y: r1.top + r1.height/2 - parent.top };
+            const p2 = { x: r2.left + r2.width/2 - parent.left, y: r2.top + r2.height/2 - parent.top };
+            const p3 = { x: r3.left + r3.width/2 - parent.left, y: r3.top + r3.height/2 - parent.top };
+
+            svg.innerHTML = `
+                <line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="#ff1e27" stroke-width="3" stroke-dasharray="6,4" />
+                <line x1="${p2.x}" y1="${p2.y}" x2="${p3.x}" y2="${p3.y}" stroke="#ff1e27" stroke-width="3" />
+                <line x1="${p1.x}" y1="${p1.y}" x2="${p3.x}" y2="${p3.y}" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" />
+            `;
+        }
+
+        // Background Particle Canvas
+        function initCanvas() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                reconnectStrings();
+            });
+
+            const particles = [];
+            for(let i=0; i<50; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 3 + 1,
+                    color: Math.random() > 0.3 ? '#ff1e27' : '#eab308',
+                    speedY: -Math.random() * 1 - 0.2,
+                    speedX: (Math.random() - 0.5) * 0.5
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    if (p.y < 0) p.y = height;
+                    if (p.x < 0 || p.x > width) p.x = Math.random() * width;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = p.color;
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Init on Load
+        window.onload = function() {
+            renderTickets();
+            initCanvas();
+            setTimeout(reconnectStrings, 300);
+        };
+    </script>
+</body>
+</html>
